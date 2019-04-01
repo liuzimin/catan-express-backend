@@ -335,8 +335,30 @@ io.on('connection', function (socket) {
             playerId = 0
             // add the host
             let players = [];
-            let host = new Player(req.username);
+            let host = new Player(req.session.username);
             players.push(host);
+
+
+            gameStateRef.child("-LbKAEYgo23HNux3t3Xd").once('value').then(function (snapshot) {
+                let gameState = snapshot.val();
+                if (gameState.players.length > 0) {
+                    let id = req.gameStateId;
+                    gameStateRef.child(id).once('value').then(function (snapshot) {
+                        let gameState = JSON.parse(snapshot.val());
+                        gameState.players.push(newPlayer);
+                        gameState.maxPlayerNum++;
+                        // store game state
+                        gameStateRef.child(id).set(JSON.stringify(gameState), function (err) {
+                            if (err) io.sockets.emit('PLAYER_CONNECT', JSON.stringify({ error: err }));
+                            io.sockets.emit('PLAYER_CONNECT', JSON.stringify(gameState));
+                        })
+                    })
+                        .catch(function (err) {
+                            console.log(err);
+                            io.sockets.emit('PLAYER_CONNECT', JSON.stringify({ error: err }));
+                        })
+                }
+            })
 
             // set up board
             let hexes = boardFunctions.setupHexes();
@@ -579,13 +601,6 @@ io.on('connection', function (socket) {
 
                 if (boardFunctions.isValidSettlement(req.location, currentPlayer, gameState)) {
                     if (gameState.turnPhase !== 'setup_placement') {
-
-                        // REMOVE FOR PROD
-                        currentPlayer.resources.Brick = currentPlayer.resources.Brick + 1;
-                        currentPlayer.resources.Wheat = currentPlayer.resources.Wheat + 1;
-                        currentPlayer.resources.Wood = currentPlayer.resources.Wood + 1;
-                        currentPlayer.resources.Sheep = currentPlayer.resources.Sheep + 1;
-
                         if (currentPlayer.resources.Wood > 0 && currentPlayer.resources.Brick > 0 && currentPlayer.resources.Wheat > 0 && currentPlayer.resources.Sheep > 0) {
                             let settlement = new Settlement({ player: currentPlayer._id, location: req.location });
                             gameState.settlements.push(settlement);
@@ -653,10 +668,6 @@ io.on('connection', function (socket) {
                 if (gameState.turnPhase == 'roll_phase') io.sockets.emit('PLAYER_CONNECT', JSON.stringify({ invalidMove: 'Cannot build during roll phase' }));
 
                 if (boardFunctions.checkValidCity(req.location, gameState, currentPlayer)) {
-
-                    // REMOVE THIS FOR PRODUCTION
-                    currentPlayer.resources.Ore = currentPlayer.resources.Ore + 3;
-                    currentPlayer.resources.Wheat = currentPlayer.resources.Wheat + 2;
 
                     if (currentPlayer.resources.Ore > 2 && currentPlayer.resources.Wheat > 1) {
                         boardFunctions.deleteSettlementAtLocation(req.location, gameState);
