@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>Game Title Here</title>
+    <link href="style/main.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+    <header>
+        <h1>Game Title Here</h1>
+    </header>
+
+    <form id="enter_game">
+        <span>Enter your username</span>
+        <input type="text" class="register_input" id="username" placeholder="Enter your username" required/>
+        <div id="game_type_selector">
+            <button type="button" class="selector_option" id="selector_join">Join a game</button>
+            <button type="button" class="selector_option" id="selector_host">Host a game</button>
+        </div>
+        <div class="suboption" id="join_options">
+            <table id="game_browser">
+                <thead>
+                    <tr>
+                        <th>Game Name</th>
+                        <th>Host</th>
+                        <th>Password</th>
+                    </tr>
+                </thead>
+                <tbody id="game_list">
+                    <!--Example: when backend is up this table will be populated by list of all active games-->
+                    <tr class = "game">
+                        <td><span class="game_name">Game 1</span></td>
+                        <td><span class="game_host">PlayerHost</span></td>
+                        <td><input type="text" class="game_pw" id="game1pw" required/></td>
+                        <td><button type="submit" class="join_game" id="joingame1">Join Game</button></td>
+                    </tr>       
+                </tbody>
+            </table>
+        </div>
+        <div class="suboption" id="host_options">
+            <span>Enter name of lobby</span>
+            <input type="text" class="register_input" id="host_lobby_name"/>
+            <span>Enter password for lobby (optional)</span>
+            <input type="text" class="register_input" id="host_lobby_pw">
+            <button type="submit" id="create_game">Create Game</button>
+        </div>
+
+    </form>
+
+
+    <footer>
+    </footer>
+    <script src="js/index.js"></script>
+</body>
+</html>
