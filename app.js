@@ -362,9 +362,6 @@ io.on('connection', function (socket) {
         if (req.string == 'player_join') {
             let newPlayer = new Player(req.username);
 
-            // FOR PROD:
-            // newPlayer._id = req.session.uid;
-
             let id = req.gameStateId;
             gameStateRef.child(id).once('value').then(function (snapshot) {
                 let gameState = JSON.parse(snapshot.val());
@@ -580,12 +577,6 @@ io.on('connection', function (socket) {
                 if (boardFunctions.isValidSettlement(req.location, currentPlayer, gameState)) {
                     if (gameState.turnPhase !== 'setup_placement') {
 
-                        // REMOVE FOR PROD
-                        currentPlayer.resources.Brick = currentPlayer.resources.Brick + 1;
-                        currentPlayer.resources.Wheat = currentPlayer.resources.Wheat + 1;
-                        currentPlayer.resources.Wood = currentPlayer.resources.Wood + 1;
-                        currentPlayer.resources.Sheep = currentPlayer.resources.Sheep + 1;
-
                         if (currentPlayer.resources.Wood > 0 && currentPlayer.resources.Brick > 0 && currentPlayer.resources.Wheat > 0 && currentPlayer.resources.Sheep > 0) {
                             let settlement = new Settlement({ player: currentPlayer._id, location: req.location });
                             gameState.settlements.push(settlement);
@@ -653,10 +644,6 @@ io.on('connection', function (socket) {
                 if (gameState.turnPhase == 'roll_phase') io.sockets.emit('PLAYER_CONNECT', JSON.stringify({ invalidMove: 'Cannot build during roll phase' }));
 
                 if (boardFunctions.checkValidCity(req.location, gameState, currentPlayer)) {
-
-                    // REMOVE THIS FOR PRODUCTION
-                    currentPlayer.resources.Ore = currentPlayer.resources.Ore + 3;
-                    currentPlayer.resources.Wheat = currentPlayer.resources.Wheat + 2;
 
                     if (currentPlayer.resources.Ore > 2 && currentPlayer.resources.Wheat > 1) {
                         boardFunctions.deleteSettlementAtLocation(req.location, gameState);
