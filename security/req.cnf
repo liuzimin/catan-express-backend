@@ -1,0 +1,19 @@
+[req]
+distinguished_name = req_distinguished_name
+x509_extensions = v3_req
+prompt = no
+[req_distinguished_name]
+C = CA
+ST = ON
+L = Location
+O = Organization Name
+OU = Organizational Unit 
+CN = https://c09-project.herokuapp.com/
+[v3_req]
+keyUsage = critical, digitalSignature, keyAgreement
+extendedKeyUsage = serverAuth
+subjectAltName = @alt_names
+[alt_names]
+DNS.1 = https://c09-project.herokuapp.com/
+DNS.2 = c09-project.herokuapp.com/
+DNS.3 = c09-project.herokuapp
