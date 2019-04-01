@@ -4,7 +4,7 @@ self.__precacheManifest = [
     "url": "/static/media/house.eb58de88.png"
   },
   {
-    "revision": "c7224a224e8b870d2693",
+    "revision": "6ca1330975a0815943e5",
     "url": "/static/css/main.8b0059ea.chunk.css"
   },
   {
@@ -20,12 +20,12 @@ self.__precacheManifest = [
     "url": "/static/js/runtime~main.229c360f.js"
   },
   {
-    "revision": "9a0d77ae8bfb3162e35bb9ceeae838d0",
-    "url": "/static/media/checkmark.9a0d77ae.png"
-  },
-  {
     "revision": "7181ec0eaba9e5857577188c39a20d25",
     "url": "/static/media/crossmark.7181ec0e.png"
+  },
+  {
+    "revision": "9a0d77ae8bfb3162e35bb9ceeae838d0",
+    "url": "/static/media/checkmark.9a0d77ae.png"
   },
   {
     "revision": "7073481d4a79044f71207ec3e35fcd81",
@@ -36,8 +36,8 @@ self.__precacheManifest = [
     "url": "/static/media/rocks.1712d598.jpg"
   },
   {
-    "revision": "c7224a224e8b870d2693",
-    "url": "/static/js/main.c7224a22.chunk.js"
+    "revision": "6ca1330975a0815943e5",
+    "url": "/static/js/main.6ca13309.chunk.js"
   },
   {
     "revision": "470a82f0758d3ee4c072fa8e607789df",
@@ -56,19 +56,19 @@ self.__precacheManifest = [
     "url": "/static/media/VP_dev.5a608c30.jpg"
   },
   {
-    "revision": "37277f9ca9e4f04a836d196c7bd0a8e2",
-    "url": "/static/media/road_builders.37277f9c.jpg"
-  },
-  {
     "revision": "d3c7c0c5815e1af2b1d66fefc210a3ea",
     "url": "/static/media/monopoly.d3c7c0c5.jpg"
+  },
+  {
+    "revision": "37277f9ca9e4f04a836d196c7bd0a8e2",
+    "url": "/static/media/road_builders.37277f9c.jpg"
   },
   {
     "revision": "e98729c76defd9914aa6",
     "url": "/static/css/1.19cd8cbd.chunk.css"
   },
   {
-    "revision": "d1d77634f4062d3b43b2b75cdb86490a",
+    "revision": "e85b36bed6b29ce5223f16b315c78ffd",
     "url": "/index.html"
   }
 ];
