@@ -72,6 +72,10 @@ let isAuthenticated = function (req, res, next) {
     next();
 }
 
+app.get('/test', function (req, res, next) {
+    res.json('Hello from Settlers of Catan!');
+})
+
 app.post('/signIn', function (req, res, next) {
     // console.log("cookie: ", req.universalCookies.get('user'))
     console.log('hello')
@@ -301,7 +305,7 @@ function getPlayerByID(playerID, gameState) {
 
 
 const https = require('https');
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // const httpsOptions = {
 //     key: fs.readFileSync('./securityDev/cert.key'),
