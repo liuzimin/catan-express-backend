@@ -185,47 +185,42 @@ app.post('/signOut', function (req, res, next) {
 })
 
 app.get('/getRooms', function (req, res) {
-    let allRooms = gameStateRef;
-    res.json(allRooms);
-})
-
-// app.get('/getRooms', function (req, res) {
-//     let error = false
-//     if (error) {
-//         res.status(500);
-//         res.json({
-//             error: 'GET_ROOMS_FAILED',
-//         });
-//     }
-//     res.json({
-//         error: null,
-//         rooms: [
-//             { name: 'room1', numPlayers: 3, maxPlayers: 4 },
-//             { name: 'room2nameisawesome1', numPlayers: 1, maxPlayers: 4 },
-//             { name: 'room13', numPlayers: 4, maxPlayers: 4 },
-//             { name: 'room111', numPlayers: 3, maxPlayers: 4 },
-//             { name: 'room2nameisawesome2', numPlayers: 1, maxPlayers: 4 },
-//             { name: 'room11111', numPlayers: 3, maxPlayers: 4 },
-//             { name: 'room2nameisawesome3', numPlayers: 1, maxPlayers: 4 },
-//             { name: 'room1222', numPlayers: 3, maxPlayers: 4 },
-//             { name: 'room2nameisawesome4', numPlayers: 1, maxPlayers: 4 },
-//             { name: 'room12', numPlayers: 3, maxPlayers: 4 },
-//             { name: 'room2nameisawesome5', numPlayers: 1, maxPlayers: 4 },
-//             { name: 'room31', numPlayers: 3, maxPlayers: 4 },
-//             { name: 'room2nameisawesome6', numPlayers: 1, maxPlayers: 4 },
-//             { name: 'room145', numPlayers: 3, maxPlayers: 4 },
-//             { name: 'room2nameisawesome7', numPlayers: 1, maxPlayers: 4 },
-//             { name: 'room1565', numPlayers: 3, maxPlayers: 4 },
-//             { name: 'room2nameisawesome8', numPlayers: 1, maxPlayers: 4 },
-//             { name: 'room67671', numPlayers: 3, maxPlayers: 4 },
-//             { name: 'room2nameisawesome9', numPlayers: 1, maxPlayers: 4 },
-//             { name: 'room165746', numPlayers: 3, maxPlayers: 4 },
-//             { name: 'room2nameisawesome10', numPlayers: 1, maxPlayers: 4 },
-//             { name: 'room1435634', numPlayers: 3, maxPlayers: 4 },
-//             { name: 'room2nameisawesome11', numPlayers: 1, maxPlayers: 4 },
-//         ]
-//     })
-// });
+    let error = false
+    if (error) {
+        res.status(500);
+        res.json({
+            error: 'GET_ROOMS_FAILED',
+        });
+    }
+    res.json({
+        error: null,
+        rooms: [
+            { name: 'room1', numPlayers: 3, maxPlayers: 4 },
+            { name: 'room2nameisawesome1', numPlayers: 1, maxPlayers: 4 },
+            { name: 'room13', numPlayers: 4, maxPlayers: 4 },
+            { name: 'room111', numPlayers: 3, maxPlayers: 4 },
+            { name: 'room2nameisawesome2', numPlayers: 1, maxPlayers: 4 },
+            { name: 'room11111', numPlayers: 3, maxPlayers: 4 },
+            { name: 'room2nameisawesome3', numPlayers: 1, maxPlayers: 4 },
+            { name: 'room1222', numPlayers: 3, maxPlayers: 4 },
+            { name: 'room2nameisawesome4', numPlayers: 1, maxPlayers: 4 },
+            { name: 'room12', numPlayers: 3, maxPlayers: 4 },
+            { name: 'room2nameisawesome5', numPlayers: 1, maxPlayers: 4 },
+            { name: 'room31', numPlayers: 3, maxPlayers: 4 },
+            { name: 'room2nameisawesome6', numPlayers: 1, maxPlayers: 4 },
+            { name: 'room145', numPlayers: 3, maxPlayers: 4 },
+            { name: 'room2nameisawesome7', numPlayers: 1, maxPlayers: 4 },
+            { name: 'room1565', numPlayers: 3, maxPlayers: 4 },
+            { name: 'room2nameisawesome8', numPlayers: 1, maxPlayers: 4 },
+            { name: 'room67671', numPlayers: 3, maxPlayers: 4 },
+            { name: 'room2nameisawesome9', numPlayers: 1, maxPlayers: 4 },
+            { name: 'room165746', numPlayers: 3, maxPlayers: 4 },
+            { name: 'room2nameisawesome10', numPlayers: 1, maxPlayers: 4 },
+            { name: 'room1435634', numPlayers: 3, maxPlayers: 4 },
+            { name: 'room2nameisawesome11', numPlayers: 1, maxPlayers: 4 },
+        ]
+    })
+});
 
 let GameState = (function (state) {
     return {
