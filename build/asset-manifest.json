@@ -1,7 +1,7 @@
 {
   "main.css": "/static/css/main.98d69e03.chunk.css",
-  "main.js": "/static/js/main.e84ff75f.chunk.js",
-  "main.js.map": "/static/js/main.e84ff75f.chunk.js.map",
+  "main.js": "/static/js/main.e96b5de2.chunk.js",
+  "main.js.map": "/static/js/main.e96b5de2.chunk.js.map",
   "static/css/1.e5040749.chunk.css": "/static/css/1.e5040749.chunk.css",
   "static/js/1.297cb980.chunk.js": "/static/js/1.297cb980.chunk.js",
   "static/js/1.297cb980.chunk.js.map": "/static/js/1.297cb980.chunk.js.map",
@@ -13,9 +13,9 @@
   "static/media/PlayerCard.module.css": "/static/media/victory points.732f472d.png",
   "static/media/DevCard.module.css": "/static/media/yearofplenty.627063ce.jpg",
   "static/media/GameButtons.module.css": "/static/media/checkmark.9a0d77ae.png",
-  "static/css/1.e5040749.chunk.css.map": "/static/css/1.e5040749.chunk.css.map",
   "static/css/main.98d69e03.chunk.css.map": "/static/css/main.98d69e03.chunk.css.map",
+  "static/css/1.e5040749.chunk.css.map": "/static/css/1.e5040749.chunk.css.map",
   "index.html": "/index.html",
-  "precache-manifest.5fdbbd5245a943c5bcd60169aa63ff2b.js": "/precache-manifest.5fdbbd5245a943c5bcd60169aa63ff2b.js",
+  "precache-manifest.322146012869f188eb40d99c8ea445bd.js": "/precache-manifest.322146012869f188eb40d99c8ea445bd.js",
   "service-worker.js": "/service-worker.js"
 }
