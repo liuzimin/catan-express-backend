@@ -4,7 +4,7 @@ self.__precacheManifest = [
     "url": "/static/media/house.eb58de88.png"
   },
   {
-    "revision": "1e67a497d4098d5b2ef9",
+    "revision": "15ec5683a0af523d70c7",
     "url": "/static/css/main.98d69e03.chunk.css"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = [
     "url": "/static/media/yearofplenty.627063ce.jpg"
   },
   {
-    "revision": "297cb980fa74b77d918e",
-    "url": "/static/js/1.297cb980.chunk.js"
+    "revision": "a69ee4c77e213fadc175",
+    "url": "/static/js/1.a69ee4c7.chunk.js"
   },
   {
     "revision": "229c360febb4351a89df",
@@ -36,8 +36,8 @@ self.__precacheManifest = [
     "url": "/static/media/rocks.1712d598.jpg"
   },
   {
-    "revision": "1e67a497d4098d5b2ef9",
-    "url": "/static/js/main.1e67a497.chunk.js"
+    "revision": "15ec5683a0af523d70c7",
+    "url": "/static/js/main.15ec5683.chunk.js"
   },
   {
     "revision": "470a82f0758d3ee4c072fa8e607789df",
@@ -56,19 +56,19 @@ self.__precacheManifest = [
     "url": "/static/media/monopoly.d3c7c0c5.jpg"
   },
   {
-    "revision": "37277f9ca9e4f04a836d196c7bd0a8e2",
-    "url": "/static/media/road_builders.37277f9c.jpg"
-  },
-  {
     "revision": "5a608c30d23ef6f43cdc1db430b3e6bd",
     "url": "/static/media/VP_dev.5a608c30.jpg"
   },
   {
-    "revision": "297cb980fa74b77d918e",
+    "revision": "37277f9ca9e4f04a836d196c7bd0a8e2",
+    "url": "/static/media/road_builders.37277f9c.jpg"
+  },
+  {
+    "revision": "a69ee4c77e213fadc175",
     "url": "/static/css/1.e5040749.chunk.css"
   },
   {
-    "revision": "38e64537fbb78a33310bb09303c421a8",
+    "revision": "6605aa470ab85c07dae24a70fa6e8cb3",
     "url": "/index.html"
   }
 ];
