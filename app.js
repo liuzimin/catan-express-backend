@@ -1,6 +1,5 @@
 /*jshint esversion: 6*/
 const express = require('express');
-// const cookiesMiddleware = require('universal-cookie-express');
 const firebase = require('firebase');
 const admin = require('firebase-admin');
 const app = express();
@@ -10,7 +9,6 @@ const session = require('express-session');
 const fs = require('fs');
 const boardFunctions = require('./board.js');
 const serviceAccount = require('./c09-project-firebase-adminsdk-xuxa7-da3b397950.json');
-// cookieParser = require('cookie-parser');
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -19,14 +17,6 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.use(express.static('build'));
-
-// app.use(cookiesMiddleware()).use(function (req, res) {
-//     req.universalCookies.set('user', "user123")
-//     console.log("cookie: ", req.universalCookies.get('user'))
-
-// })
-
-// app.use(cookieParser());
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
@@ -77,8 +67,6 @@ app.get('/test', function (req, res, next) {
 })
 
 app.post('/signIn', function (req, res, next) {
-    // console.log("cookie: ", req.universalCookies.get('user'))
-    console.log('hello')
     let resObj = {
         error: null,
         uid: null,
@@ -91,26 +79,21 @@ app.post('/signIn', function (req, res, next) {
         admin.auth().getUserByEmail(req.body.email)
             .then(function (userRecord) {
                 // See the UserRecord reference doc for the contents of userRecord.
-                console.log('Successfully fetched user data:', userRecord.toJSON());
+                // console.log('Successfully fetched user data:', userRecord.toJSON());
                 resObj.idTokenExpiryDate = userRecord.tokensValidAfterTime;
                 resObj.username = userRecord.displayName;
                 resObj.uid = userRecord.uid;
                 admin.auth().createCustomToken(userRecord.uid).then(function (token) {
                     resObj.idToken = token;
-                    // res.setHeader('Set-Cookie', cookie.serialize('user', JSON.stringify({ uid: resObj.uid, username: resObj.username }), {
-                    //     path: '/',
-                    //     maxAge: 60 * 60 * 24 * 7
-                    // }));
-                    // console.log('res: ', res.getHeaders()['set-cookie'])
                     req.session.uid = resObj.uid;
                     req.session.user = resObj.username;
-                    // console.log('resObj: ', resObj)
-                    // return res.cookie('name', 'myName').json('cookie set');
 
+                    res.status(200);
                     return res.json(resObj);
                 })
                     .catch(function (error) {
                         console.log(error)
+                        res.status(401);
                         res.json({
                             error: 'INVALID_PASSWORD'
                         });
@@ -121,38 +104,11 @@ app.post('/signIn', function (req, res, next) {
             });
     }).catch(function (err) {
         console.log('INVALID_PASSWORD')
+        res.status(401);
         res.json({
             error: 'INVALID_PASSWORD'
         });
     })
-
-
-    // admin.auth().getUserByEmail(req.body.email)
-    // .then(function(userRecord) {
-    //   // See the UserRecord reference doc for the contents of userRecord.
-    //   console.log('Successfully fetched user data:', userRecord.toJSON());
-    //   resObj.idTokenExpiryDate = userRecord.tokensValidAfterTime;
-    //   resObj.username = userRecord.displayName;
-    //   resObj.uid = userRecord.uid;
-    //   admin.auth().createCustomToken(userRecord.uid).then(function(token) {
-    //     resObj.idToken = token;
-    //     res.setHeader('Set-Cookie', cookie.serialize('user', JSON.stringify({uid: resObj.uid, username: resObj.username }), {
-    //         path : '/', 
-    //         maxAge: 60 * 60 * 24 * 7
-    //     }));
-    //     // console.log('res: ', res.getHeaders()['set-cookie'])
-    //     req.session.uid = resObj.uid;
-    //     req.session.user = resObj.username;
-    //     // console.log('resObj: ', resObj)
-    //     return res.json(resObj);
-    //   })
-    //   .catch(function(error) {
-    //     console.log(error)
-    //   })
-    // })
-    // .catch(function(error) {
-    //  console.log('Error fetching user data:', error);
-    // });
 
 });
 
@@ -165,10 +121,12 @@ app.post('/signUp', function (req, res, next) {
     })
         .then(function (userRecord) {
             console.log('Successfully created new user: ', userRecord.uid);
+            res.status(200)
             res.send({ error: null });
         })
         .catch(function (error) {
             console.log('Error creating user: ', error)
+            res.status(401)
             res.json({
                 error: 'SIGN_UP_FAILED'
             });
@@ -185,42 +143,93 @@ app.post('/signOut', function (req, res, next) {
 })
 
 app.get('/getRooms', function (req, res) {
-    let error = false
-    if (error) {
-        res.status(500);
+
+    gameStateRef.once("value").then(function(snapshot) {
+        let allStates = snapshot.val();
+        let rooms = [];
+        for (let key in allStates) {
+            let state = JSON.parse(allStates[key]);
+            let roomObj = {
+                id: key,
+                name: state.gameName,
+                currentPlayers: state.maxPlayerNum,
+                maxPlayers: 4,
+            }
+            rooms.push(roomObj);
+        }
+        res.status(200)
         res.json({
-            error: 'GET_ROOMS_FAILED',
-        });
-    }
-    res.json({
-        error: null,
-        rooms: [
-            { name: 'room1', numPlayers: 3, maxPlayers: 4 },
-            { name: 'room2nameisawesome1', numPlayers: 1, maxPlayers: 4 },
-            { name: 'room13', numPlayers: 4, maxPlayers: 4 },
-            { name: 'room111', numPlayers: 3, maxPlayers: 4 },
-            { name: 'room2nameisawesome2', numPlayers: 1, maxPlayers: 4 },
-            { name: 'room11111', numPlayers: 3, maxPlayers: 4 },
-            { name: 'room2nameisawesome3', numPlayers: 1, maxPlayers: 4 },
-            { name: 'room1222', numPlayers: 3, maxPlayers: 4 },
-            { name: 'room2nameisawesome4', numPlayers: 1, maxPlayers: 4 },
-            { name: 'room12', numPlayers: 3, maxPlayers: 4 },
-            { name: 'room2nameisawesome5', numPlayers: 1, maxPlayers: 4 },
-            { name: 'room31', numPlayers: 3, maxPlayers: 4 },
-            { name: 'room2nameisawesome6', numPlayers: 1, maxPlayers: 4 },
-            { name: 'room145', numPlayers: 3, maxPlayers: 4 },
-            { name: 'room2nameisawesome7', numPlayers: 1, maxPlayers: 4 },
-            { name: 'room1565', numPlayers: 3, maxPlayers: 4 },
-            { name: 'room2nameisawesome8', numPlayers: 1, maxPlayers: 4 },
-            { name: 'room67671', numPlayers: 3, maxPlayers: 4 },
-            { name: 'room2nameisawesome9', numPlayers: 1, maxPlayers: 4 },
-            { name: 'room165746', numPlayers: 3, maxPlayers: 4 },
-            { name: 'room2nameisawesome10', numPlayers: 1, maxPlayers: 4 },
-            { name: 'room1435634', numPlayers: 3, maxPlayers: 4 },
-            { name: 'room2nameisawesome11', numPlayers: 1, maxPlayers: 4 },
-        ]
+            error: null,
+            rooms: rooms
+        })
     })
-});
+    .catch(function (err) {
+        res.status(404)
+        res.json({
+            error: err,
+            rooms: []
+        })
+    })
+    
+})
+
+
+app.post('/roomSetup', function (req, res) {
+    let gameName = req.body.gameName;
+    //playerId = 0
+    // add the host
+    // let players = [];
+    // let host = new Player(req.body.username);
+    // host._id = req.body.uid;
+    // players.push(host);
+
+    // set up board
+    let hexes = boardFunctions.setupHexes();
+
+    let gameState = new GameState({ gameName: gameName, players: [], hexes: hexes, maxPlayers: 0});
+    let id = gameStateRef.push(JSON.stringify(gameState)).key;
+    gameStateRef.child(id).once('value').then(function (snapshot) {
+        let gameState = JSON.parse(snapshot.val());
+        gameState._id = id;
+        res.json(id);
+    })
+})
+
+
+app.post('/playerJoin', function (req, res) {
+    let newPlayer = new Player(req.body.username);
+
+    //newPlayer._id = req.body.uid;
+
+    let id = req.body.gameStateId;
+    gameStateRef.child(id).once('value').then(function (snapshot) {
+        let gameState = JSON.parse(snapshot.val());
+
+        gameState._id = id;
+
+        newPlayer._id = gameState.maxPlayerNum;
+
+        // error if the game is full
+        if (gameState.maxPlayerNum == 4) res.status(403).json({error: "Cannot join: room is full"});
+        // if (gameState.maxPlayerNum == 4) io.sockets.emit('PLAYER_CONNECT', JSON.stringify({ error: "Cannot join: room is full"}));
+
+        gameState.players.push(newPlayer);
+        gameState.maxPlayerNum++;
+        // store game state
+        gameStateRef.child(id).set(JSON.stringify(gameState), function (err) {
+            if (err) res.status(404).json({error: err});
+            io.sockets.emit('PLAYER_CONNECT', JSON.stringify(gameState));
+            gameState.youArePlayer = newPlayer._id;
+            res.status(200).json(gameState);
+            // if (err) io.sockets.emit('PLAYER_CONNECT', JSON.stringify({ error: err }));
+            // io.sockets.emit('PLAYER_CONNECT', JSON.stringify(gameState));
+        })
+    })
+        .catch(function (err) {
+            res.status(404).json({error: err});
+            // io.sockets.emit('PLAYER_CONNECT', JSON.stringify({ error: err }));
+        })
+})
 
 let GameState = (function (state) {
     return {
@@ -313,11 +322,11 @@ const PORT = process.env.PORT || 3000;
 // }
 
 // const server = https.createServer(httpsOptions, app)
-//     .listen(PORT, () => {
+//     .listen(process.env.PORT || PORT, () => {
 //         console.log('server running at ' + PORT)
 //     })
 
-let server = app.listen(PORT, function (err) {
+let server = app.listen( process.env.PORT || PORT, function (err) {
     if (err) console.log(err);
     else console.log("HTTP server on http://localhost:%s", PORT);
 });
@@ -329,6 +338,32 @@ io.on('connection', function (socket) {
 
     socket.on('PLAYER_CONNECT', (req) => {
 
+        // if (req.string == 'reset_game') {
+        //     let id = req.gameStateId;
+        //     gameStateRef.child(id).once('value').then(function (snapshot) {
+        //         let gameState = snapshot.val();
+
+        //         // reset the game
+        //         gameState.hexes = boardFunctions.setupHexes();
+        //         gameState.roads = [];
+        //         gameState.settlements = [];
+        //         gameState.cities = [];
+        //         gameState.setupRoad = 0;
+        //         gameState.setupSettlement = 0;
+        //         gameState.currentPlayerNum = 0;
+        //         gameState.currentTurn = null;
+        //         gameState.turnPhase = 'game not started';
+        //         gameState.gameOver = false;
+        //         gameState.winner = null;
+
+        //         // store game state
+        //         gameStateRef.child(id).set(JSON.stringify(gameState), function (err) {
+        //             if (err) io.sockets.emit('PLAYER_CONNECT', JSON.stringify({ error: err }));
+        //             io.sockets.emit('PLAYER_CONNECT', JSON.stringify(gameState));
+        //         })
+        //     })
+        // }
+
         // create game room
         if (req.string == 'room_setup') {
             let gameName = req.gameName;
@@ -336,6 +371,7 @@ io.on('connection', function (socket) {
             // add the host
             let players = [];
             let host = new Player(req.username);
+            host._id = req.uid;
             players.push(host);
 
             // set up board
@@ -362,9 +398,14 @@ io.on('connection', function (socket) {
         if (req.string == 'player_join') {
             let newPlayer = new Player(req.username);
 
+            newPlayer._id = req.uid;
+
             let id = req.gameStateId;
             gameStateRef.child(id).once('value').then(function (snapshot) {
                 let gameState = JSON.parse(snapshot.val());
+                // error if the game is full
+                if (gameState.maxPlayerNum == 4) io.sockets.emit('PLAYER_CONNECT', JSON.stringify({ error: "Cannot join: room is full"}));
+
                 gameState.players.push(newPlayer);
                 gameState.maxPlayerNum++;
                 // store game state
@@ -383,6 +424,7 @@ io.on('connection', function (socket) {
         // game starts
         if (req.string == 'start_game') {
             let id = req.gameStateId
+            console.log("game id: ", id)
             gameStateRef.child(id).once('value').then(function (snapshot) {
                 let gameState = JSON.parse(snapshot.val());
                 gameState.currentTurn = gameState.players[gameState.currentPlayerNum];
@@ -405,7 +447,17 @@ io.on('connection', function (socket) {
             gameStateRef.child(id).once('value').then(function (snapshot) {
                 let gameState = JSON.parse(snapshot.val());
 
-                if (gameState.turnPhase == 'setup_placement') io.sockets.emit('PLAYER_CONNECT', JSON.stringify(gameState));
+                console.log("current user", req.username)
+                console.log("current turn", gameState.currentTurn.username)
+                console.log("current phase", gameState.turnPhase)
+                if (gameState.currentTurn.username !== req.username) {
+                    io.sockets.emit('PLAYER_CONNECT', JSON.stringify({ error: 'Not your turn!' }));
+                    return;
+                }
+                if (gameState.turnPhase == 'roll_phase') {
+                    io.sockets.emit('PLAYER_CONNECT', JSON.stringify({ error: 'Cannot build during roll phase' }));
+                    return;
+                }
 
                 gameState = boardFunctions.advanceToNextTurn(gameState);
 
@@ -427,7 +479,17 @@ io.on('connection', function (socket) {
             let id = req.gameStateId;
             gameStateRef.child(id).once('value').then(function (snapshot) {
                 let gameState = JSON.parse(snapshot.val());
-                gameState.turnPhase = 'move_robber';
+
+                let currentPlayer = gameState.currentTurn;
+
+                // give current player one of each resource
+                boardFunctions.addResource("Wheat", getPlayerByID(currentPlayer._id, gameState));
+                boardFunctions.addResource("Ore", getPlayerByID(currentPlayer._id, gameState));
+                boardFunctions.addResource("Brick", getPlayerByID(currentPlayer._id, gameState));
+                boardFunctions.addResource("Wood", getPlayerByID(currentPlayer._id, gameState));
+                boardFunctions.addResource("Sheep", getPlayerByID(currentPlayer._id, gameState));
+
+                // gameState.turnPhase = 'move_robber';
                 // store game state
                 gameStateRef.child(id).set(JSON.stringify(gameState), function (err) {
                     if (err) io.sockets.emit('PLAYER_CONNECT', JSON.stringify({ error: err }));
@@ -517,7 +579,15 @@ io.on('connection', function (socket) {
                 gameState.currentTurn = gameState.players[gameState.currentPlayerNum];
                 let currentPlayer = gameState.currentTurn;
 
-                if (gameState.turnPhase == 'roll_phase') io.sockets.emit('PLAYER_CONNECT', JSON.stringify({ error: 'Cannot build during roll phase' }));
+
+                if (currentPlayer.username !== req.username) {
+                    io.sockets.emit('PLAYER_CONNECT', JSON.stringify({ error: 'Not your turn!' }));
+                    return;
+                }
+                if (gameState.turnPhase == 'roll_phase') {
+                    io.sockets.emit('PLAYER_CONNECT', JSON.stringify({ error: 'Cannot build during roll phase' }));
+                    return;
+                }
 
                 if (boardFunctions.isValidRoad(req.start, req.end, gameState)) {
                     if (gameState.turnPhase !== 'setup_placement') {
@@ -572,10 +642,23 @@ io.on('connection', function (socket) {
                 gameState.currentTurn = gameState.players[gameState.currentPlayerNum];
                 let currentPlayer = gameState.currentTurn;
 
-                if (gameState.turnPhase == 'roll_phase') io.sockets.emit('PLAYER_CONNECT', JSON.stringify({ invalidMove: 'Cannot build during roll phase' }));
+                if (currentPlayer.username !== req.username) {
+                    io.sockets.emit('PLAYER_CONNECT', JSON.stringify({ error: 'Not your turn!' }));
+                    return;
+                }
+                if (gameState.turnPhase == 'roll_phase') {
+                    io.sockets.emit('PLAYER_CONNECT', JSON.stringify({ error: 'Cannot build during roll phase' }));
+                    return;
+                }
 
                 if (boardFunctions.isValidSettlement(req.location, currentPlayer, gameState)) {
                     if (gameState.turnPhase !== 'setup_placement') {
+
+                        // REMOVE FOR PROD
+                        currentPlayer.resources.Brick = currentPlayer.resources.Brick + 1;
+                        currentPlayer.resources.Wheat = currentPlayer.resources.Wheat + 1;
+                        currentPlayer.resources.Wood = currentPlayer.resources.Wood + 1;
+                        currentPlayer.resources.Sheep = currentPlayer.resources.Sheep + 1;
 
                         if (currentPlayer.resources.Wood > 0 && currentPlayer.resources.Brick > 0 && currentPlayer.resources.Wheat > 0 && currentPlayer.resources.Sheep > 0) {
                             let settlement = new Settlement({ player: currentPlayer._id, location: req.location });
@@ -641,9 +724,20 @@ io.on('connection', function (socket) {
                 gameState.currentTurn = gameState.players[gameState.currentPlayerNum];
                 let currentPlayer = gameState.currentTurn;
 
-                if (gameState.turnPhase == 'roll_phase') io.sockets.emit('PLAYER_CONNECT', JSON.stringify({ invalidMove: 'Cannot build during roll phase' }));
+                if (currentPlayer.username !== req.username) {
+                    io.sockets.emit('PLAYER_CONNECT', JSON.stringify({ error: 'Not your turn!' }));
+                    return;
+                }
+                if (gameState.turnPhase == 'roll_phase') {
+                    io.sockets.emit('PLAYER_CONNECT', JSON.stringify({ error: 'Cannot build during roll phase' }));
+                    return;
+                }
 
                 if (boardFunctions.checkValidCity(req.location, gameState, currentPlayer)) {
+
+                    // REMOVE THIS FOR PRODUCTION
+                    currentPlayer.resources.Ore = currentPlayer.resources.Ore + 3;
+                    currentPlayer.resources.Wheat = currentPlayer.resources.Wheat + 2;
 
                     if (currentPlayer.resources.Ore > 2 && currentPlayer.resources.Wheat > 1) {
                         boardFunctions.deleteSettlementAtLocation(req.location, gameState);
