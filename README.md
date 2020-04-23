@@ -1,3 +1,3 @@
-# c09-express-backend
+# catan-express-backend
 
 Game Server for Catan
